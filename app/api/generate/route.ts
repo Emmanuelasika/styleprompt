@@ -4,15 +4,12 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 import os from "os";
-import { pipeline } from "stream";
-import { promisify } from "util";
 
 // CONSTANTS
 const MODEL_NAME = "gemini-2.5-flash";
 
-export const maxDuration = 300; // Allow 300 seconds for processing
-
-const pump = promisify(pipeline);
+// Allow up to 5 minutes for video processing
+export const maxDuration = 300;
 
 export async function POST(req: Request) {
     let stylePath = "";
@@ -31,6 +28,9 @@ export async function POST(req: Request) {
             );
         }
 
+        console.log(`Style video: ${styleVideo.name} (${(styleVideo.size / 1024 / 1024).toFixed(2)} MB)`);
+        console.log(`Target video: ${targetVideo.name} (${(targetVideo.size / 1024 / 1024).toFixed(2)} MB)`);
+
         const apiKey = process.env.GEMINI_API_KEY;
         if (!apiKey) {
             return NextResponse.json(
@@ -39,7 +39,7 @@ export async function POST(req: Request) {
             );
         }
 
-        // Initialize Standard SDK (v1beta default)
+        // Initialize Standard SDK
         const fileManager = new GoogleAIFileManager(apiKey);
         const genAI = new GoogleGenerativeAI(apiKey);
         const model = genAI.getGenerativeModel({ model: MODEL_NAME });
@@ -58,8 +58,8 @@ export async function POST(req: Request) {
         targetPath = await saveToTemp(targetVideo);
         console.log("Temp files saved:", stylePath, targetPath);
 
-        // Upload
-        console.log("Uploading files...");
+        // Upload to Gemini
+        console.log("Uploading files to Gemini...");
         const uploadResponse1 = await fileManager.uploadFile(stylePath, {
             mimeType: styleVideo.type || "video/mp4",
             displayName: "Style Reference",
