@@ -110,12 +110,12 @@ export async function POST(req: Request) {
             "**OBJECTIVE**: Write a comprehensive, detailed text prompt that describes exactly how to transform Video 1 into Video 2. The description should be vivid and precise.\n\n" +
             "**INSTRUCTIONS**:\n" +
             "1. **Opening**: Start strictly with: 'Please create a new video in the [describe style] style...'\n" +
-            "2. **Narrative Flow**: Describe the video scene-by-scene in a chronological way (e.g., 'The video starts with...', 'Then...', 'Finally...').\n" +
-            "3. **Visual Details**: Focus on the Art Style, Backgrounds, Lighting, and Textures in every scene.\n" +
-            "4. **Character Consistency**: Please explicitly mention that character details should remain consistent.\n" +
-            "5. **Audio**: Include a description of the audio and atmosphere.\n\n" +
+            "2. **Narrative Flow**: Describe the video scene-by-scene in a chronological way.\n" +
+            "3. **Visual Details**: Focus on the Art Style, Backgrounds, Lighting, and Textures.\n" +
+            "4. **Character Consistency**: Explicitly mention that character details should remain consistent.\n" +
+            "5. **Audio & Duration**: INTEGRATE these naturally into the text. e.g., 'The new video length should be [X] seconds. It features [audio description]...'\n\n" +
             "**OUTPUT**:\n" +
-            "Please provide the prompt text directly (starting with the required phrase), followed by a brief summary of the Duration and Audio at the end.",
+            "Provide ONLY the natural language prompt. Do not separate metadata.",
         ]);
 
         const response = await result.response;
