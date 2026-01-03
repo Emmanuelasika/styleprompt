@@ -8,7 +8,8 @@ import { pipeline } from "stream";
 import { promisify } from "util";
 
 // CONSTANTS
-const MODEL_NAME = "gemini-2.0-flash-exp"; // Verified working model
+const MODEL_NAME = "gemini-2.5-flash"; // User requested model
+// const MODEL_NAME = "gemini-2.0-flash-exp"; // Verified working model
 
 export const maxDuration = 60; // Allow 60 seconds for processing
 
@@ -106,11 +107,13 @@ export async function POST(req: Request) {
                     fileUri: file2.uri,
                 },
             },
-            "You are an expert video style analyzer. I have uploaded two videos.\n" +
-            "1. The FIRST video is the 'Style Reference'. Analyze its visual style deeply (lighting, color palette, camera movement, film grain, pacing, aspect ratio).\n" +
-            "2. The SECOND video is the 'Target Content'. Identify its core subject matter and action.\n" +
-            "3. YOUR TASK: Write a single, highly detailed text prompt that would instruct a video generation model to recreate the CONTENT of the second video, but in the exact STYLE of the first video.\n" +
-            "4. OUTPUT FORMAT: strict. Do not provide analysis, do not say 'Here is the prompt'. specificly output ONLY the raw prompt text.",
+            "You are an expert video editing assistant. I have uploaded two videos.\n" +
+            "1. The FIRST video is the 'Source Footage'.\n" +
+            "2. The SECOND video is the 'Desired Output'.\n" +
+            "3. Compare them to identify EVERY edit and transformation applied (text overlays, specific fonts/colors, color grading nuances, speed ramps, effects, transitions).\n" +
+            "4. YOUR TASK: Write an improperly detailed, comprehensive prompt that could be pasted into an AI Video Editor to 'Transform the Source Footage into the Desired Output'.\n" +
+            "5. The prompt MUST be highly descriptive. Do not be generic. Capture every detail: exact text content, font style (serif/sans-serif), position, color hex codes (approximated), camera movement changes, and lighting shifts.\n" +
+            "6. OUTPUT FORMAT: strict. Output ONLY the raw transformation prompt text. Do not include any introductory or concluding remarks.",
         ]);
 
         const response = await result.response;
