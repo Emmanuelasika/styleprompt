@@ -112,8 +112,16 @@ export async function POST(req: Request) {
             "2. The SECOND video is the 'Desired Output'.\n" +
             "3. CONTEXT: We are creating a training dataset for a video generative AI. The FIRST video is the 'Condition/Sketch' (Input). The SECOND video is the 'Ground Truth/Final Output' (Result).\n" +
             "4. YOUR TASK: Reverse-engineer the specific text prompt that would be required to generate the SECOND video using the FIRST video as a structural reference.\n" +
-            "5. The prompt must describe the SECOND video in extreme detail (its style, rendering, lighting, texture, and mood). For example, if V1 is a sketch and V2 is a 3D render, the prompt should be: 'Please, create A high-fidelity 3D render of a star bouncing, cinematic lighting, octane render... it should land on... '.\n" +
-            "6. OUTPUT FORMAT: strict. Output ONLY the raw prompt text used to generate the target.",
+            "5. The prompt must describe the SECOND video in extreme detail (its style, rendering, lighting, texture, and mood). For example, if V1 is a sketch and V2 is a 3D render, the prompt should be: 'Please, create A high-fidelity 3D render...'.\n" +
+            "   IMPORTANT: The description should be SCENE CONNECTED. Use a narrative flow like 'then make the character do this... and run up the hill, make sure the hill is...'. Avoid disjointed lists; use transitions like 'then', 'after that', 'while'.\n" +
+            "6. CRITICAL ADDITION: You MUST also extract and include valid details about the target video's audio and duration.\n" +
+            "   - Duration: State the approximate length of the video in seconds.\n" +
+            "   - Audio: Describe the soundscape, including any dialogue, voiceovers, background music, or sound effects found in the target video.\n" +
+            "7. OUTPUT FORMAT: strict. Output ONLY the raw prompt text used to generate the target, followed by the metadata:\n" +
+            "   [PROMPT TEXT HERE...]\n\n" +
+            "   [METADATA]\n" +
+            "   Duration: <time>\n" +
+            "   Audio: <description>",
         ]);
 
         const response = await result.response;
