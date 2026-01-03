@@ -20,14 +20,50 @@ export default function Home() {
     setter: (file: File | null) => void
   ) => {
     if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.size > 90 * 1024 * 1024) { // 90MB warning
-        setError(`Warning: ${file.name} is ${(file.size / 1024 / 1024).toFixed(1)}MB. It might exceed server limits (100MB).`);
-      } else {
-        setError(null);
-      }
-      setter(file);
+      setter(e.target.files[0]);
+      setError(null);
     }
+  };
+
+  // Helper for Direct Upload
+  const uploadToGemini = async (file: File, label: string): Promise<string> => {
+    const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+    if (!apiKey) throw new Error("API Key not found (NEXT_PUBLIC_GEMINI_API_KEY)");
+
+    // 1. Initiate Upload
+    const initRes = await fetch(
+      `https://generativelanguage.googleapis.com/upload/v1beta/files?key=${apiKey}`,
+      {
+        method: "POST",
+        headers: {
+          "X-Goog-Upload-Protocol": "resumable",
+          "X-Goog-Upload-Command": "start",
+          "X-Goog-Upload-Header-Content-Length": file.size.toString(),
+          "X-Goog-Upload-Header-Content-Type": file.type,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ file: { display_name: label } }),
+      }
+    );
+
+    if (!initRes.ok) throw new Error(`Upload Init Failed: ${initRes.statusText}`);
+    const uploadUrl = initRes.headers.get("X-Goog-Upload-URL");
+    if (!uploadUrl) throw new Error("No upload URL returned");
+
+    // 2. Upload Bytes
+    const uploadRes = await fetch(uploadUrl, {
+      method: "POST",
+      headers: {
+        "Content-Length": file.size.toString(),
+        "X-Goog-Upload-Offset": "0",
+        "X-Goog-Upload-Command": "upload, finalize",
+      },
+      body: file,
+    });
+
+    if (!uploadRes.ok) throw new Error(`File Upload Failed: ${uploadRes.statusText}`);
+    const fileData = await uploadRes.json();
+    return fileData.file.uri;
   };
 
   const handleGenerate = async () => {
@@ -40,33 +76,36 @@ export default function Home() {
     setError(null);
     setResult(null);
 
-    const formData = new FormData();
-    formData.append("styleVideo", styleVideo);
-    formData.append("targetVideo", targetVideo);
-
     try {
+      // Step A: Upload directly to Gemini (Bypass Vercel 4.5MB limit)
+      console.log("Uploading Style Video...");
+      const styleUri = await uploadToGemini(styleVideo, "Style Reference");
+
+      console.log("Uploading Target Video...");
+      const targetUri = await uploadToGemini(targetVideo, "Target Output");
+
+      console.log("Generating with URIs:", styleUri, targetUri);
+
+      // Step B: Send URIs to Backend
       const res = await fetch("/api/generate", {
         method: "POST",
-        body: formData,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ styleUri, targetUri }),
       });
 
-      const text = await res.text();
-
-      // Try to parse as JSON, but handle raw text gracefully
-      let data;
-      try {
-        data = JSON.parse(text);
-      } catch {
-        // If not valid JSON, treat the raw text as the error
-        throw new Error(text || "Something went wrong");
+      // Handle Errors
+      const contentType = res.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        const text = await res.text();
+        throw new Error(`Server Error (${res.status}): ${text.slice(0, 100)}`);
       }
 
-      if (!res.ok) {
-        throw new Error(data.error || "Something went wrong");
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Generation failed");
 
       setResult(data.result);
     } catch (err: any) {
+      console.error(err);
       setError(err.message);
     } finally {
       setLoading(false);
