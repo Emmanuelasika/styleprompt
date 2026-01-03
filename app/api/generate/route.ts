@@ -112,7 +112,7 @@ export async function POST(req: Request) {
             "2. The SECOND video is the 'Desired Output'.\n" +
             "3. CONTEXT: We are creating a training dataset for a video generative AI. The FIRST video is the 'Condition/Sketch' (Input). The SECOND video is the 'Ground Truth/Final Output' (Result).\n" +
             "4. YOUR TASK: Reverse-engineer the specific text prompt that would be required to generate the SECOND video using the FIRST video as a structural reference.\n" +
-            "5. The prompt must describe the SECOND video in extreme detail (its style, rendering, lighting, texture, and mood). For example, if V1 is a sketch and V2 is a 3D render, the prompt should be: 'A high-fidelity 3D render, cinematic lighting, octane render...'.\n" +
+            "5. The prompt must describe the SECOND video in extreme detail (its style, rendering, lighting, texture, and mood). For example, if V1 is a sketch and V2 is a 3D render, the prompt should be: 'Please, create A high-fidelity 3D render of a star bouncing, cinematic lighting, octane render... it should land on... '.\n" +
             "6. OUTPUT FORMAT: strict. Output ONLY the raw prompt text used to generate the target.",
         ]);
 
