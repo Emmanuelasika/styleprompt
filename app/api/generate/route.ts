@@ -8,8 +8,9 @@ import { pipeline } from "stream";
 import { promisify } from "util";
 
 // CONSTANTS
-const MODEL_NAME = "gemini-2.5-flash"; // User requested model
-// const MODEL_NAME = "gemini-2.0-flash-exp"; // Verified working model
+// CONSTANTS
+// const MODEL_NAME = "gemini-2.5-flash"; // User requested model
+const MODEL_NAME = "gemini-2.0-flash-exp"; // Verified working model
 
 export const maxDuration = 60; // Allow 60 seconds for processing
 
@@ -110,20 +111,14 @@ export async function POST(req: Request) {
             "You are an expert Prompt Engineer for advanced video generation models. I have provided two videos:\n" +
             "1. **Input Structure (Video 1)**: The structural reference (sketch, wireframe, or raw footage).\n" +
             "2. **Target Output (Video 2)**: The final styled result (the 'ground truth').\n\n" +
-            "**OBJECTIVE**: Write the *perfect* text prompt that would cause a video generation model to transform Video 1 into Video 2. The prompt must be so detailed that a blind artist could recreate the video solely from your words.\n\n" +
+            "**OBJECTIVE**: Write a comprehensive, detailed text prompt that describes exactly how to transform Video 1 into Video 2. The description should be vivid and precise.\n\n" +
             "**INSTRUCTIONS**:\n" +
-            "1. **Core Directive**: Start with 'Please create a new video in the [specific style of V2] style...'\n" +
-            "2. **Narrative Flow**: The description must be **SCENE CONNECTED**. Use a chronological flow (e.g., 'The video is split into 3 parts...', 'In the beginning...', 'Then...', 'Finally...').\n" +
-            "3. **Visual Specifics**: Describe the **Background** and **Lighting** for every scene. Analyze the **Art Style** (line quality, color palette, texture) in depth.\n" +
-            "4. **Character Consistency**: Describe characters detailedly (clothing, features). EXPLICITLY state: 'Ensure character consistency throughout the video.'\n" +
-            "5. **Audio & Atmosphere**: Integrate audio cues into the narrative. Describe how the music, dialogue, or sound effects enhance the mood (e.g., 'accompanied by calm guitar music', 'dialogue appears as subtitles').\n" +
-            "6. **Technical**: Mention camera movements, transitions, and text overlays.\n\n" +
-            "**OUTPUT FORMAT**:\n" +
-            "Output ONLY the raw prompt text followed by the metadata block.\n" +
-            "[PROMPT TEXT HERE...]\n\n" +
-            "[METADATA]\n" +
-            "Duration: <seconds>\n" +
-            "Audio: <concise audio summary>",
+            "1. **Narrative Flow**: Describe the video scene-by-scene in a chronological way (e.g., 'The video starts with...', 'Then...', 'Finally...').\n" +
+            "2. **Visual Details**: Focus on the Art Style, Backgrounds, Lighting, and Textures in every scene.\n" +
+            "3. **Character Consistency**: Please explicitly mention that character details should remain consistent.\n" +
+            "4. **Audio**: Include a description of the audio and atmosphere.\n\n" +
+            "**OUTPUT**:\n" +
+            "Please provide the prompt text directly, followed by a brief summary of the Duration and Audio at the end.",
         ]);
 
         const response = await result.response;
