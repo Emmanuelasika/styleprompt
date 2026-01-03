@@ -110,10 +110,10 @@ export async function POST(req: Request) {
             "You are an expert video editing assistant. I have uploaded two videos.\n" +
             "1. The FIRST video is the 'Source Footage'.\n" +
             "2. The SECOND video is the 'Desired Output'.\n" +
-            "3. Watch the FIRST video to intuit its unique animation style, rendering look, and aesthetic.\n" +
-            "4. YOUR TASK: Write a detailed prompt to transform the Content of the SECOND video into the exact Animation Style observed in the FIRST video.\n" +
-            "5. Describe the style exactly as you see it (e.g. the specific type of 3D/2D rendering, the motion fluidity, the texture). Do not assume specific techniques unless visible.\n" +
-            "6. OUTPUT FORMAT: strict. Output ONLY the raw transformation prompt text. Do not include any introductory or concluding remarks.",
+            "3. Analyze the SECOND video (Target) to understand its SCENES, ACTIONS, and COMPOSITION (the content).\n" +
+            "4. Analyze the FIRST video (Reference) to understand its ANIMATION STYLE (visuals, line work, texture, rendering).\n" +
+            "5. YOUR TASK: Write a generated prompt that describes the SCENES of Video 2, but strictly in the STYLE of Video 1. For example: 'A [Scene from V2] rendered in a [Style from V1] style...'\n" +
+            "6. OUTPUT FORMAT: strict. Output ONLY the raw prompt text. Do not include any introductory or concluding remarks.",
         ]);
 
         const response = await result.response;
