@@ -46,11 +46,24 @@ export async function POST(req: Request) {
 
         console.log(`Using Model: ${MODEL_NAME}`);
 
-        // Helper to save file temporarily
+        // Helper to save file temporarily using streams to save memory
         const saveToTemp = async (file: File) => {
             const tempPath = path.join(os.tmpdir(), `${Date.now()}-${file.name.replace(/\s/g, "_")}`);
-            const buffer = Buffer.from(await file.arrayBuffer());
-            await fs.promises.writeFile(tempPath, buffer);
+            const stream = fs.createWriteStream(tempPath);
+            const reader = file.stream().getReader();
+
+            while (true) {
+                const { done, value } = await reader.read();
+                if (done) break;
+                stream.write(Buffer.from(value));
+            }
+
+            stream.end();
+            await new Promise((resolve, reject) => {
+                stream.on("finish", () => resolve(null));
+                stream.on("error", reject);
+            });
+
             return tempPath;
         };
 

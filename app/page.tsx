@@ -20,8 +20,13 @@ export default function Home() {
     setter: (file: File | null) => void
   ) => {
     if (e.target.files && e.target.files[0]) {
-      setter(e.target.files[0]);
-      setError(null);
+      const file = e.target.files[0];
+      if (file.size > 90 * 1024 * 1024) { // 90MB warning
+        setError(`Warning: ${file.name} is ${(file.size / 1024 / 1024).toFixed(1)}MB. It might exceed server limits (100MB).`);
+      } else {
+        setError(null);
+      }
+      setter(file);
     }
   };
 
