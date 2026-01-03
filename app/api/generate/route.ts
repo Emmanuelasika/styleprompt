@@ -107,21 +107,23 @@ export async function POST(req: Request) {
                     fileUri: file2.uri,
                 },
             },
-            "You are an expert video editing assistant. I have uploaded two videos.\n" +
-            "1. The FIRST video is the 'Source Footage'.\n" +
-            "2. The SECOND video is the 'Desired Output'.\n" +
-            "3. CONTEXT: We are creating a training dataset for a video generative AI. The FIRST video is the 'Condition/Sketch' (Input). The SECOND video is the 'Ground Truth/Final Output' (Result).\n" +
-            "4. YOUR TASK: Reverse-engineer the specific text prompt that would be required to generate the SECOND video using the FIRST video as a structural reference.\n" +
-            "5. The prompt must describe the SECOND video in extreme detail (its style, rendering, lighting, texture, and mood). For example, if V1 is a sketch and V2 is a 3D render, the prompt should be: 'Please, create A high-fidelity 3D render...'.\n" +
-            "   IMPORTANT: The description should be SCENE CONNECTED. Use a narrative flow like 'then make the character do this... and run up the hill, make sure the hill is...'. Avoid disjointed lists; use transitions like 'then', 'after that', 'while'.\n" +
-            "6. CRITICAL ADDITION: You MUST also extract and include valid details about the target video's audio and duration.\n" +
-            "   - Duration: State the approximate length of the video in seconds.\n" +
-            "   - Audio: Describe the soundscape, including any dialogue, voiceovers, background music, or sound effects found in the target video.\n" +
-            "7. OUTPUT FORMAT: strict. Output ONLY the raw prompt text used to generate the target, followed by the metadata:\n" +
-            "   [PROMPT TEXT HERE...]\n\n" +
-            "   [METADATA]\n" +
-            "   Duration: <time>\n" +
-            "   Audio: <description>",
+            "You are an expert Prompt Engineer for advanced video generation models. I have provided two videos:\n" +
+            "1. **Input Structure (Video 1)**: The structural reference (sketch, wireframe, or raw footage).\n" +
+            "2. **Target Output (Video 2)**: The final styled result (the 'ground truth').\n\n" +
+            "**OBJECTIVE**: Write the *perfect* text prompt that would cause a video generation model to transform Video 1 into Video 2. The prompt must be so detailed that a blind artist could recreate the video solely from your words.\n\n" +
+            "**INSTRUCTIONS**:\n" +
+            "1. **Core Directive**: Start with 'Please create a new video in the [specific style of V2] style...'\n" +
+            "2. **Narrative Flow**: The description must be **SCENE CONNECTED**. Use a chronological flow (e.g., 'The video is split into 3 parts...', 'In the beginning...', 'Then...', 'Finally...').\n" +
+            "3. **Visual Specifics**: Describe the **Background** and **Lighting** for every scene. Analyze the **Art Style** (line quality, color palette, texture) in depth.\n" +
+            "4. **Character Consistency**: Describe characters detailedly (clothing, features). EXPLICITLY state: 'Ensure character consistency throughout the video.'\n" +
+            "5. **Audio & Atmosphere**: Integrate audio cues into the narrative. Describe how the music, dialogue, or sound effects enhance the mood (e.g., 'accompanied by calm guitar music', 'dialogue appears as subtitles').\n" +
+            "6. **Technical**: Mention camera movements, transitions, and text overlays.\n\n" +
+            "**OUTPUT FORMAT**:\n" +
+            "Output ONLY the raw prompt text followed by the metadata block.\n" +
+            "[PROMPT TEXT HERE...]\n\n" +
+            "[METADATA]\n" +
+            "Duration: <seconds>\n" +
+            "Audio: <concise audio summary>",
         ]);
 
         const response = await result.response;
