@@ -8,11 +8,9 @@ import { pipeline } from "stream";
 import { promisify } from "util";
 
 // CONSTANTS
-// CONSTANTS
-// const MODEL_NAME = "gemini-2.5-flash"; // User requested model
-const MODEL_NAME = "gemini-2.0-flash-exp"; // Verified working model
+const MODEL_NAME = "gemini-2.5-flash";
 
-export const maxDuration = 60; // Allow 60 seconds for processing
+export const maxDuration = 300; // Allow 300 seconds for processing
 
 const pump = promisify(pipeline);
 
@@ -21,7 +19,7 @@ export async function POST(req: Request) {
     let targetPath = "";
 
     try {
-        console.log("--- STARTING API REQUEST (Gemini 2.0 Flash) ---");
+        console.log("--- STARTING API REQUEST (Gemini 2.5 Flash) ---");
         const formData = await req.formData();
         const styleVideo = formData.get("styleVideo") as File;
         const targetVideo = formData.get("targetVideo") as File;

@@ -45,7 +45,16 @@ export default function Home() {
         body: formData,
       });
 
-      const data = await res.json();
+      const text = await res.text();
+
+      // Try to parse as JSON, but handle raw text gracefully
+      let data;
+      try {
+        data = JSON.parse(text);
+      } catch {
+        // If not valid JSON, treat the raw text as the error
+        throw new Error(text || "Something went wrong");
+      }
 
       if (!res.ok) {
         throw new Error(data.error || "Something went wrong");
