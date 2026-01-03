@@ -110,9 +110,9 @@ export async function POST(req: Request) {
             "You are an expert video editing assistant. I have uploaded two videos.\n" +
             "1. The FIRST video is the 'Source Footage'.\n" +
             "2. The SECOND video is the 'Desired Output'.\n" +
-            "3. Compare them to identify EVERY edit and transformation applied (text overlays, specific fonts/colors, color grading nuances, speed ramps, effects, transitions).\n" +
-            "4. YOUR TASK: Write an improperly detailed, comprehensive prompt that could be pasted into an AI Video Editor to 'Transform the Source Footage into the Desired Output'.\n" +
-            "5. The prompt MUST be highly descriptive. Do not be generic. Capture every detail: exact text content, font style (serif/sans-serif), position, color hex codes (approximated), camera movement changes, and lighting shifts.\n" +
+            "3. Compare them to identify EVERY edit and transformation applied, with a specific focus on ANIMATION styles (2D/3D, grain, rendering style, motion graphics, text overlays).\n" +
+            "4. YOUR TASK: Write an improperly detailed, comprehensive prompt that could be pasted into an AI Video Generator to 'Transform the Source Footage into the Desired Output'.\n" +
+            "5. The prompt MUST be highly descriptive from an ANIMATION perspective. Capture details like: '3D rendered look', 'Cel-shaded', 'Vector art style', 'Fluid motion', specific color palettes, lighting shaders, and text animations.\n" +
             "6. OUTPUT FORMAT: strict. Output ONLY the raw transformation prompt text. Do not include any introductory or concluding remarks.",
         ]);
 
